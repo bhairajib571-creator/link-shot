@@ -1,0 +1,23 @@
+{
+  "entities": {
+    "link": {
+      "title": "Link",
+      "description": "A shortened link record",
+      "type": "object",
+      "properties": {
+        "original_url": { "type": "string", "description": "The destination URL" },
+        "type": { "type": "string", "enum": ["link"], "description": "Type of content" },
+        "created_at": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
+        "views": { "type": "integer", "description": "Number of times viewed" },
+        "id": { "type": "string", "description": "Short code slug" }
+      },
+      "required": ["original_url", "type", "created_at", "views", "id"]
+    }
+  },
+  "firestore": {
+    "links/{linkId}": {
+      "schema": "link",
+      "description": "Collection of shortened links"
+    }
+  }
+}
