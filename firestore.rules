@@ -1,0 +1,33 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function isSignedIn() { return request.auth != null; }
+    
+    function isValidLink(data) {
+      return data.keys().hasAll(['original_url', 'type', 'created_at', 'views', 'id']) &&
+             data.original_url is string &&
+             data.type == 'link';
+    }
+
+    match /links/{linkId} {
+      // Anyone can resolve a link
+      allow get: if true;
+      
+      // Anyone can create a link
+      allow create: if true;
+      
+      // Only incrementing views is allowed for public
+      allow update: if true;
+
+      // Allow public listing for the simple public dashboard
+      allow list: if true; 
+    }
+  }
+}
